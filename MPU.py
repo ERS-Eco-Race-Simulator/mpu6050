@@ -1,6 +1,6 @@
 from mpu6050 import mpu6050
 from threading import Thread
-import time
+import time, math
 
 class Accel():
 
@@ -14,7 +14,8 @@ class Accel():
         self.COLLECTING_DATA = False
 
         self.err = (0, 0, 0)
-        self.speed = (0, 0, 0)
+        self.speeds = (0, 0, 0)
+        self.speed = 0
 
     def calibration(self):
         
@@ -52,7 +53,8 @@ class Accel():
         while self.COLLECTING_DATA:
             data = self.MPU.get_accel_data()
             speeds = [ v + (a - e) * self.DT for v, a, e in zip(list(self.speed), [data['x'], data['y'], data['z']], list(self.err)) ]
-            self.speed = tuple(speeds)
+            self.speed = math.sqrt( data['y']**2 + math.sqrt( data['x']**2 + data['y']**2 )**2 )
+            self.speeds = tuple(speeds)
             time.sleep(self.DT)
 
 if __name__ == '__main__':
