@@ -52,7 +52,7 @@ class Accel():
     def collect_data(self):
         while self.COLLECTING_DATA:
             data = self.MPU.get_accel_data()
-            speeds = [ v + (a - e) * self.DT for v, a, e in zip(list(self.speed), [data['x'], data['y'], data['z']], list(self.err)) ]
+            speeds = [ v + (a - e) * self.DT for v, a, e in zip(list(self.speeds), [data['x'], data['y'], data['z']], list(self.err)) ]
             self.speed = math.sqrt( data['y']**2 + math.sqrt( data['x']**2 + data['y']**2 )**2 )
             self.speeds = tuple(speeds)
             time.sleep(self.DT)
